@@ -1,0 +1,1 @@
+VEM-Profiles is forked from DBM-Profiles which is all right reserved. We only have the permission from the original writer to reuse the code in this addon. If you want to reuse any code from here, please contact Lombra the original writer. Thanks.
