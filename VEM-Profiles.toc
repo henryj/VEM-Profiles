@@ -1,4 +1,4 @@
-## Interface: 50300
+## Interface: 50400
 ## Title: Voice Encounter Mods Profiles
 ## Notes: AceDB profiles for Voice Encounter Mods.
 ## Version: 1.0.4
