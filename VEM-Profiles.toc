@@ -1,11 +1,11 @@
 ## Interface: 50400
 ## Title: Voice Encounter Mods Profiles
 ## Notes: AceDB profiles for Voice Encounter Mods.
-## Version: 1.0.4
+## Version: 1.0.5
 ## Author: Lombra
 ## RequiredDeps: VEM-Core
 ## SavedVariables: DeadlyBossModsDB
-## X-Curse-Packaged-Version: 1.0.4
+## X-Curse-Packaged-Version: 1.0.5
 ## X-Curse-Project-Name: Voice Encounter Mods Profiles
 ## X-Curse-Project-ID: vem-profiles
 ## X-Curse-Repository-ID: wow/vem-profiles/mainline

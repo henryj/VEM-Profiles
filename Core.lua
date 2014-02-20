@@ -97,6 +97,7 @@ local function statsOnShow(panel)
 		setTexts(panel, "top3", "lfr25")
 		setTexts(panel, "bot1", "heroic")
 		setTexts(panel, "bot2", "heroic25")
+		setTexts(panel, "bot3", "flex")
 	end
 end
 
@@ -116,11 +117,12 @@ function addon:ADDON_LOADED(addon)
 			local n = 0
 			
 			for _, mod in ipairs(VEM.Mods) do
-				if mod.modId == addon.modId and (not subtab or subtab == mod.subTab) then
+				if mod.modId == addon.modId and (not subtab or subtab == mod.subTab) and not mod.isTrashMod and not mod.noStatistics then
 					local p = {mod = mod}
 					local _
 					p.top1a, p.top1b, p.top1c, _, _, _, _, p.top2a, p.top2b, p.top2c, _, _, _, _, p.top3a, p.top3b, p.top3c, _, _, _, _,
-						p.bot1a, p.bot1b, p.bot1c, _, _, _, _, p.bot2a, p.bot2b, p.bot2c = select(9 + 6 + (36 * n), frame:GetRegions())
+						p.bot1a, p.bot1b, p.bot1c, _, _, _, _, p.bot2a, p.bot2b, p.bot2c, _, _, _, _, p.bot3a, p.bot3b, p.bot3c
+						= select(9 + 6 + (43 * n), frame:GetRegions())
 					n = n + 1
 					tinsert(area.onshowcall, p)
 				end
@@ -208,30 +210,18 @@ function addon:ADDON_LOADED(addon)
 		
 		namespaces[db] = modId
 		
-		local statsName = modId:gsub("-", "").."_SavedStats"
-		oldOptions[statsName] = _G[statsName]
-		
+		local varPrefix = modId:gsub("-", "")
 		-- redefine the old saved variables to "trick" the modules into referring to our profiles instead
-		_G[modId:gsub("-", "").."_SavedVars"] = db.profile.options
-		_G[statsName] = db.profile.stats
+		_G[varPrefix.."_SavedVars"] = db.profile.options
+		_G[varPrefix.."_SavedStats"] = db.profile.stats
+		oldOptions[varPrefix.."_SavedVars"] = true
+		oldOptions[varPrefix.."_SavedStats"] = true
 		
 		for i, v in ipairs(VEM.Mods) do
 			if v.modId == modId then
-				db.defaults.profile.options[v.id] = v.DefaultOptions
+				-- db.defaults.profile.options[v.id] = v.DefaultOptions
 				db.defaults.profile.stats[v.id] = {
-					normalKills = 0,
-					normalPulls = 0,
-					heroicKills = 0,
-					heroicPulls = 0,
-					challengeKills = 0,
-					challengePulls = 0,
-					normal25Kills = 0,
-					normal25Kills = 0,
-					normal25Pulls = 0,
-					heroic25Kills = 0,
-					heroic25Pulls = 0,
-					lfr25Kills = 0,
-					lfr25Pulls = 0,
+					["*"] = 0,
 				}
 			end
 		end
@@ -239,8 +229,9 @@ function addon:ADDON_LOADED(addon)
 end
 
 function addon:PLAYER_LOGOUT()
-	for k, v in pairs(oldOptions) do
-		_G[k] = v
+	-- nil out the original saved variables as they won't be used from now on
+	for k in pairs(oldOptions) do
+		_G[k] = nil
 	end
 end
 
