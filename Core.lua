@@ -1,5 +1,7 @@
 local addonName = ...
 
+local Libra = LibStub("Libra")
+
 local VEM = VEM
 
 local function copyTable(source, dest)
@@ -79,6 +81,8 @@ addon:SetScript("OnEvent", function(self, event, ...)
 	self[event](self, ...)
 end)
 
+VEMProfiles = addon
+
 local function setTexts(panel, label, type)
 	local stats = panel.mod.stats
 	local bestTime = stats[type.."BestTime"]
@@ -92,12 +96,16 @@ local function statsOnShow(panel)
 	if panel.mod.type == "PARTY" or panel.mod.type == "SCENARIO" then
 		setTexts(panel, "top2", "heroic")
 		setTexts(panel, "top3", "challenge")
+	elseif panel.mod.type == "RAID" and panel.mod.hasMythic then
+		setTexts(panel, "top1", "lfr25")
+		setTexts(panel, "top2", "normal")
+		setTexts(panel, "bot1", "heroic")
+		setTexts(panel, "bot2", "mythic")
 	else
 		setTexts(panel, "top2", "normal25")
 		setTexts(panel, "top3", "lfr25")
 		setTexts(panel, "bot1", "heroic")
 		setTexts(panel, "bot2", "heroic25")
-		setTexts(panel, "bot3", "flex")
 	end
 end
 
@@ -106,7 +114,7 @@ function addon:ADDON_LOADED(addon)
 		VEM:RegisterOnGuiLoadCallback(function()
 			local panel = VEM_GUI_Frame:CreateNewPanel("Profiles", "option")
 			local area = panel:CreateArea(nil, nil, nil, true)
-			AceDBUI:CreateUI("VEM-Profiles-UI", self.db, area.frame)
+			Libra:CreateAceDBControls(self.db, area.frame):SetPoint("CENTER")
 		end)
 		
 		local function setOnShow(addon, panel, subtab)
